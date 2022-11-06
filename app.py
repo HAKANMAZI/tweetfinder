@@ -19,7 +19,7 @@ def delete_csv():
 
 from datetime import datetime
 from datetime import timedelta
-class most_liked_tweets():
+class ScrapeTweets():
     def __init__(self) -> None:
         self.yesterday = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
         self.tomorrow = datetime.strftime(datetime.now() + timedelta(1), '%Y-%m-%d')
@@ -35,6 +35,7 @@ class most_liked_tweets():
 
 
     def trending_tweets_url(self, keyword, like_count=50, sincetime="", untiltime=""):
+        ''' Bu kelime hangi tweette geçiyor onları scrape etmek için'''
         counter = 0
         self.posts = []
         for i, tweet in enumerate(twitter.TwitterSearchScraper(keyword + ' since:'+sincetime+' until:'+untiltime).get_items()):
@@ -55,8 +56,27 @@ class most_liked_tweets():
         return self.posts
         
 
+    def userTweets(self, username='',keyword='' , like_count=0, sincetime="", untiltime=""):
+        counter = 0
+        self.posts = []
+        for i, tweet in enumerate(twitter.TwitterSearchScraper('from:'+username+' '+keyword+' since:'+sincetime+' until:'+untiltime).get_items()):
+            if tweet.likeCount >= like_count:
+                if counter == 3: break
+                print(self.yesterday)
+                print(self.tomorrow)
+                print(tweet.url)
 
-cls=most_liked_tweets()
+                tweet = {
+                'username': tweet.user.username,
+                'content': tweet.content,
+                'date_posted': tweet.date,
+                'url': tweet.url
+                }
+                self.posts.append(tweet)
+                counter +=1
+
+
+cls=ScrapeTweets()
 post_times = []
 post_times = cls.post_times()
 
@@ -68,32 +88,33 @@ app.config['SECRET_KEY'] = "DemoString"
 def index():
     return render_template("index.html")
 
-@app.route("/login", methods=['GET','POST'])
-def login():
-    return render_template("index.html")
+# @app.route("/login", methods=['GET','POST'])
+# def login():
+#     return render_template("index.html")
+# 
+# @app.route("/register", methods=['GET','POST'])
+# def register():
+#     return render_template("index.html")
 
-@app.route("/register", methods=['GET','POST'])
-def register():
-    return render_template("index.html")
 
 
-
-@app.route("/trending_tweets_url", methods=['GET','POST'])
+@app.route("/index", methods=['GET','POST'])
 def trending_tweets_url():
     delete_csv()
     posts = []
     if request.method == 'POST':
-        session['keyword'] = request.form.get('keyword')
+        session['Username'] = request.form.get('Username')
+        session['TweetWord'] = request.form.get('TweetWord')
         session['like_count'] = request.form.get('like_count')
         session['sincetime'] = request.form.get('sincetime')
         session['untiltime'] = request.form.get('untiltime')
 
         if session['keyword']:
-            posts = cls.trending_tweets_url(session['keyword'], int(session['like_count']), session['sincetime'], session['untiltime'] )
+            posts = cls.userTweets(session['Username'],session['TweetWord'], int(session['like_count']), session['sincetime'], session['untiltime'] )
 
     print(post_times) 
     print(posts)   
-    return render_template('trending_tweets_url.html', post_times=post_times, posts = posts)
+    return render_template('index.html', post_times=post_times, posts = posts)
     
 
 if __name__=="__main__":

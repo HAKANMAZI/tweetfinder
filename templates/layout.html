@@ -11,16 +11,16 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
     {% if title %}
-        <title>Twitter Scraper - {{ title }}</title>
+        <title>Find Users Tweets - {{ title }}</title>
     {% else %}
-        <title>Twitter Scraper</title>
+        <title>Find Users Tweets</title>
     {% endif %}
 </head>
 <body>
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Twitter Scraper</a>
+          <a class="navbar-brand mr-4" href="/">Find Users Tweets</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -35,15 +35,19 @@
             <a class="nav-item nav-link" href="/trending_tweets">TrendingTweets</a>
             <a class="nav-item nav-link" href="/trending_tweets_url">trending_tweets_url</a>
             <a class="nav-item nav-link" href="/home">home</a> 
-            -->
+            
             <a class="nav-item nav-link" href="/trending_tweets_url">Trending Tweets</a>
+            -->
+
             </div>
 
 
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
+              <!-- 
               <a class="nav-item nav-link" href="/login">Login</a>
               <a class="nav-item nav-link" href="/register">Register</a>
+              -->
             </div>
 
           </div>
