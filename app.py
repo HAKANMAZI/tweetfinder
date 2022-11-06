@@ -56,15 +56,16 @@ class ScrapeTweets():
         return self.posts
         
 
-    def userTweets(self, username='',keyword='' , like_count=0, sincetime="", untiltime=""):
+    def userTweets(self, username='',TweetWord='' , like_count=0, sincetime="", untiltime=""):
         counter = 0
         self.posts = []
-        for i, tweet in enumerate(twitter.TwitterSearchScraper('from:'+username+' '+keyword+' since:'+sincetime+' until:'+untiltime).get_items()):
+        for i, tweet in enumerate(twitter.TwitterSearchScraper('from:'+username+' '+TweetWord+' since:'+sincetime+' until:'+untiltime).get_items()):
             if tweet.likeCount >= like_count:
                 if counter == 3: break
                 print(self.yesterday)
                 print(self.tomorrow)
                 print(tweet.url)
+                print( tweet.content)
 
                 tweet = {
                 'username': tweet.user.username,
@@ -74,6 +75,7 @@ class ScrapeTweets():
                 }
                 self.posts.append(tweet)
                 counter +=1
+        return self.posts
 
 
 cls=ScrapeTweets()
@@ -84,9 +86,9 @@ post_times = cls.post_times()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "DemoString"
 
-@app.route("/", methods=['GET','POST'])
-def index():
-    return render_template("index.html")
+# @app.route("/", methods=['GET','POST'])
+# def index():
+#     return render_template("index.html")
 
 # @app.route("/login", methods=['GET','POST'])
 # def login():
@@ -98,8 +100,8 @@ def index():
 
 
 
-@app.route("/index", methods=['GET','POST'])
-def trending_tweets_url():
+@app.route("/", methods=['GET','POST'])
+def index():
     delete_csv()
     posts = []
     if request.method == 'POST':
@@ -109,8 +111,8 @@ def trending_tweets_url():
         session['sincetime'] = request.form.get('sincetime')
         session['untiltime'] = request.form.get('untiltime')
 
-        if session['keyword']:
-            posts = cls.userTweets(session['Username'],session['TweetWord'], int(session['like_count']), session['sincetime'], session['untiltime'] )
+        if session['Username']:
+            posts = cls.userTweets(session['Username'], session['TweetWord'], int(session['like_count']), session['sincetime'], session['untiltime'] )
 
     print(post_times) 
     print(posts)   

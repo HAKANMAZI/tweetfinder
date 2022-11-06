@@ -25,11 +25,14 @@
    
 
         {% for post in posts %}
+        <br><br>
         <label>Username   : <a> {{ post.username }} <a/>  </label> <br>
-        <label>Content    : <a> {{ post.content }} <a/>   </label> <br> 
+        <label>Content    : <a> {{ post.content }}  <a/>   </label> <br> 
         <label>Date_posted: <a>{{ post.date_posted }}<a/> </label> <br>
-        <label>Tweet Url  : <a href= {{ post.url }} > {{ post.url }} <a/>       </label> <br><br><br>
+        <label>Tweet Url  : <a href= {{ post.url }} > {{ post.url }} <a/>       </label> <br>
         {% endfor %}
+
+        <br><br>
 </body>
 
 {% endblock content %}
